@@ -1,0 +1,90 @@
+{
+  "required_fields": [
+    "title",
+    "sidebar_position",
+    "description",
+    "difficulty",
+    "time_hours",
+    "module"
+  ],
+  "optional_fields": [
+    "tags",
+    "last_updated",
+    "version"
+  ],
+  "field_validations": {
+    "title": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9\\s\\-:\\'\\(\\)\\[\\]]+$",
+      "required": true
+    },
+    "sidebar_position": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100,
+      "required": true
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 160,
+      "required": true
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["Beginner", "Beginner-Intermediate", "Intermediate", "Intermediate-Advanced", "Advanced"],
+      "required": true
+    },
+    "time_hours": {
+      "type": "number",
+      "minimum": 0.5,
+      "maximum": 12.0,
+      "required": true
+    },
+    "module": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4,
+      "required": true
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 10
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    }
+  },
+  "example": {
+    "title": "Creating Your First ROS 2 Node",
+    "sidebar_position": 2,
+    "description": "Learn to build publishers and subscribers—the foundation of ROS 2 communication.",
+    "difficulty": "Beginner",
+    "time_hours": 3.5,
+    "module": 1,
+    "tags": ["ros2", "nodes", "communication", "publisher", "subscriber"]
+  },
+  "defaults": {
+    "difficulty": "Beginner",
+    "time_hours": 2.0,
+    "module": 1
+  },
+  "validation_rules": {
+    "unique_sidebar_position_per_module": true,
+    "title_length": {
+      "min": 10,
+      "max": 100
+    },
+    "description_length": {
+      "min": 20,
+      "max": 160
+    }
+  }
+}

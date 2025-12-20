@@ -1,0 +1,49 @@
+{
+  "docusaurus_version": "3.x.x",
+  "node_version": ">=18.0.0",
+  "build_command": "npm run build",
+  "start_command": "npm run start",
+  "deploy_target": "GitHub Pages",
+  "plugins": [
+    "content-docs",
+    "content-pages",
+    "search-local",
+    "plugin-pwa",
+    "plugin-ideal-image"
+  ],
+  "sidebar_structure": {
+    "chapters_per_module": [6, 6, 5, 6],
+    "max_nesting_depth": 3,
+    "module_order": ["ros2", "simulation", "isaac", "vla"]
+  },
+  "performance_targets": {
+    "build_time_seconds": 30,
+    "lighthouse_score": 90,
+    "page_load_ms": 2000
+  },
+  "required_fields": [
+    "title",
+    "sidebar_position",
+    "description",
+    "difficulty",
+    "time_hours",
+    "module"
+  ],
+  "supported_languages": [
+    "python",
+    "bash",
+    "yaml",
+    "json",
+    "xml"
+  ],
+  "image_optimization": {
+    "max_size_kb": 500,
+    "formats": ["png", "jpg", "svg"],
+    "require_alt_text": true
+  },
+  "deployment": {
+    "github_pages": true,
+    "branch": "gh-pages",
+    "base_url": "/physical-ai-robotics-textbook/"
+  }
+}

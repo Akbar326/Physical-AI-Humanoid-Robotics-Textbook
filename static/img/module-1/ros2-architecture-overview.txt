@@ -1,0 +1,11 @@
+# ROS 2 Architecture Overview Diagram
+
+This file represents the ros2-architecture-overview.png diagram that would show:
+
+- ROS 2 ecosystem with nodes, middleware, tools
+- Distributed node communication pattern
+- DDS/RMW layer
+- Client libraries (rclcpp, rclpy)
+- Tools (ros2 CLI, rqt, rviz)
+
+Alt text: "Overview of ROS 2 architecture with distributed node communication"

@@ -1,0 +1,214 @@
+# Physical AI & Humanoid Robotics - Gazebo World Configuration Template
+# Use this file to configure Gazebo simulation worlds
+
+world:
+  # World Identification
+  name: "robotics_lab"
+  description: "Simulated robotics laboratory environment"
+
+  # Physics Engine Configuration
+  physics:
+    engine: "ode"  # ode, bullet, dart, simbody
+    real_time_factor: 1.0  # 1.0 = real-time, >1.0 = faster
+    real_time_update_rate: 1000  # Hz
+    max_step_size: 0.001  # seconds
+    gravity:
+      x: 0.0
+      y: 0.0
+      z: -9.81  # m/s^2
+
+  # ODE-specific physics parameters
+  ode_physics:
+    auto_disable_bodies: false
+    auto_disable_threshold: 0.01
+    contact_max_correcting_vel: 100.0
+    contact_surface_layer: 0.001
+    world_erp: 0.2
+    world_cfm: 1e-13
+
+  # Environment Settings
+  environment:
+    # Lighting
+    ambient_light:
+      r: 0.3
+      g: 0.3
+      b: 0.3
+      a: 1.0
+    directional_light:
+      enabled: true
+      intensity: 0.8
+      direction:
+        x: 0.5
+        y: 1.0
+        z: 1.0
+
+    # Sky and Atmosphere
+    sky:
+      enabled: true
+      time_of_day: "12:00"  # 00:00 to 23:59
+      clouds: true
+
+    # Fog
+    fog:
+      enabled: false
+      type: "linear"  # linear, exponential, exponential2
+      color:
+        r: 1.0
+        g: 1.0
+        b: 1.0
+      density: 0.01
+
+  # Ground Plane
+  ground_plane:
+    enabled: true
+    size_x: 100.0
+    size_y: 100.0
+    material: "concrete"
+    friction_mu: 0.5
+    friction_mu2: 0.5
+    restitution_coefficient: 0.0
+
+  # Models to Load
+  models:
+    ground_plane:
+      type: "model"
+      uri: "model://ground_plane"
+      name: "ground_plane"
+      static: true
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+        roll: 0.0
+        pitch: 0.0
+        yaw: 0.0
+
+    sun:
+      type: "light"
+      uri: "model://sun"
+      name: "sun"
+      pose:
+        x: 0.0
+        y: 0.0
+        z: 10.0
+        roll: 0.0
+        pitch: 0.0
+        yaw: 0.0
+
+    table:
+      type: "model"
+      uri: "model://table"
+      name: "table_1"
+      static: true
+      pose:
+        x: 1.0
+        y: 0.0
+        z: 0.0
+        roll: 0.0
+        pitch: 0.0
+        yaw: 0.0
+
+    # Dynamic obstacles
+    cylinder:
+      type: "model"
+      uri: "model://cylinder"
+      name: "obstacle_1"
+      static: false
+      pose:
+        x: 2.0
+        y: 1.0
+        z: 0.5
+        roll: 0.0
+        pitch: 0.0
+        yaw: 0.0
+
+  # Walls (optional)
+  walls:
+    enabled: true
+    north_wall:
+      x: 0.0
+      y: 5.0
+      z: 1.5
+      length: 10.0
+      height: 2.0
+      thickness: 0.1
+      material: "brick"
+
+    south_wall:
+      x: 0.0
+      y: -5.0
+      z: 1.5
+      length: 10.0
+      height: 2.0
+      thickness: 0.1
+      material: "brick"
+
+    east_wall:
+      x: 5.0
+      y: 0.0
+      z: 1.5
+      length: 10.0
+      height: 2.0
+      thickness: 0.1
+      material: "brick"
+
+    west_wall:
+      x: -5.0
+      y: 0.0
+      z: 1.5
+      length: 10.0
+      height: 2.0
+      thickness: 0.1
+      material: "brick"
+
+  # ROS 2 Plugins
+  plugins:
+    - name: "gazebo_ros_state"
+      type: "GazeboRosState"
+
+    - name: "gazebo_ros_clock"
+      type: "GazeboRosClock"
+
+  # Simulation Control
+  simulation:
+    run_in_headless_mode: false  # true for server-only
+    update_rate: 100  # Hz
+    max_contacts_per_body: 32
+
+  # Recording Settings
+  recording:
+    enabled: false
+    filename: "/tmp/gazebo_recording.dat"
+
+# Materials and Physics Properties
+materials:
+  concrete:
+    friction_mu: 0.5
+    friction_mu2: 0.5
+    restitution: 0.0
+    density: 2400  # kg/m^3
+
+  brick:
+    friction_mu: 0.6
+    friction_mu2: 0.6
+    restitution: 0.1
+    density: 1600  # kg/m^3
+
+  metal:
+    friction_mu: 0.3
+    friction_mu2: 0.3
+    restitution: 0.3
+    density: 7800  # kg/m^3
+
+  wood:
+    friction_mu: 0.4
+    friction_mu2: 0.4
+    restitution: 0.0
+    density: 600  # kg/m^3
+
+# Metadata
+metadata:
+  author: "Physical AI Lab"
+  version: "1.0.0"
+  created_date: "2025-12-16"
+  description: "Standard robotics laboratory world for Module 2"

@@ -1,0 +1,266 @@
+/**
+ * Any CSS included here will be available globally. See the following file for more information:
+ * https://docusaurus.io/docs/styling-layout
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #2e8555;
+  --ifm-color-primary-dark: #21653d;
+  --ifm-color-primary-darker: #1e5a38;
+  --ifm-color-primary-darkest: #174a2c;
+  --ifm-color-primary-light: #4ab76d;
+  --ifm-color-primary-lighter: #57c278;
+  --ifm-color-primary-lightest: #7dd590;
+
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #4ab76d;
+  --ifm-color-primary-dark: #2e8555;
+  --ifm-color-primary-darker: #21653d;
+  --ifm-color-primary-darkest: #174a2c;
+  --ifm-color-primary-light: #7dd590;
+  --ifm-color-primary-lighter: #a8e4b8;
+  --ifm-color-primary-lightest: #c6f1d0;
+
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Custom styles for the textbook */
+.textbook-hero {
+  padding: 2rem 0;
+  text-align: center;
+  background: linear-gradient(135deg, #2e8555 0%, #1e5a38 100%);
+  color: white;
+}
+
+.textbook-hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.textbook-hero p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+.module-card {
+  border: 1px solid var(--ifm-color-gray-200);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.module-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.module-card h3 {
+  color: var(--ifm-color-primary);
+  margin-top: 0;
+}
+
+/* Learning objectives styling */
+.learning-objectives {
+  background: #f0f9f6;
+  border-left: 4px solid var(--ifm-color-primary);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+}
+
+[data-theme='dark'] .learning-objectives {
+  background: rgba(46, 133, 85, 0.1);
+}
+
+/* Exercise styling */
+.exercise {
+  background: #fff8dc;
+  border-left: 4px solid #ffa500;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+}
+
+[data-theme='dark'] .exercise {
+  background: rgba(255, 165, 0, 0.1);
+}
+
+/* Code examples */
+.code-example {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+[data-theme='dark'] .code-example {
+  background: #1f1f1f;
+  border-color: #444;
+}
+
+/* Self-assessment checkpoint */
+.checkpoint {
+  background: #e6f3ff;
+  border-left: 4px solid #0066cc;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+}
+
+[data-theme='dark'] .checkpoint {
+  background: rgba(0, 102, 204, 0.1);
+}
+
+/* Callout styles */
+.callout {
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+  border-left: 4px solid;
+}
+
+.callout.info {
+  background: #e7f3ff;
+  border-color: #0066cc;
+}
+
+.callout.warning {
+  background: #fff3cd;
+  border-color: #ffc107;
+}
+
+.callout.danger {
+  background: #f8d7da;
+  border-color: #dc3545;
+}
+
+.callout.success {
+  background: #d4edda;
+  border-color: #28a745;
+}
+
+[data-theme='dark'] .callout.info {
+  background: rgba(0, 102, 204, 0.1);
+}
+
+[data-theme='dark'] .callout.warning {
+  background: rgba(255, 193, 7, 0.1);
+}
+
+[data-theme='dark'] .callout.danger {
+  background: rgba(220, 53, 69, 0.1);
+}
+
+[data-theme='dark'] .callout.success {
+  background: rgba(40, 167, 69, 0.1);
+}
+
+/* Module progress indicator */
+.progress-bar {
+  background: #e0e0e0;
+  height: 8px;
+  border-radius: 4px;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  background: var(--ifm-color-primary);
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* Responsive tables */
+table {
+  width: 100%;
+  margin: 1rem 0;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  border: 1px solid var(--ifm-color-gray-300);
+  padding: 0.75rem;
+  text-align: left;
+}
+
+table th {
+  background: var(--ifm-color-primary);
+  color: white;
+}
+
+[data-theme='dark'] table th {
+  background: #1e5a38;
+}
+
+/* Lists in content */
+ul, ol {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+
+li {
+  margin: 0.5rem 0;
+}
+
+/* Links styling */
+a {
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: #1f1f1f;
+}
+
+[data-theme='dark'] h1,
+[data-theme='dark'] h2,
+[data-theme='dark'] h3,
+[data-theme='dark'] h4,
+[data-theme='dark'] h5,
+[data-theme='dark'] h6 {
+  color: #e0e0e0;
+}
+
+/* Image styling */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Footer */
+footer {
+  background: #1f1f1f;
+  color: #e0e0e0;
+  margin-top: 3rem;
+  padding: 2rem 0;
+}

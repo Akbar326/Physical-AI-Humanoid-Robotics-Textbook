@@ -1,0 +1,98 @@
+{
+  "root_structure": {
+    "module_pattern": "module-{1-4}-{name}",
+    "chapter_pattern": "chapter-{module}.{chapter}",
+    "required_subdirs": ["code", "exercises", "solutions"]
+  },
+  "module_directories": [
+    {
+      "name": "module-1-ros2",
+      "description": "ROS 2 Fundamentals",
+      "chapters": 6,
+      "chapter_range": "1.1-1.6"
+    },
+    {
+      "name": "module-2-simulation",
+      "description": "Gazebo Simulation",
+      "chapters": 6,
+      "chapter_range": "2.1-2.6"
+    },
+    {
+      "name": "module-3-isaac",
+      "description": "Isaac Sim & AI Integration",
+      "chapters": 5,
+      "chapter_range": "3.1-3.5"
+    },
+    {
+      "name": "module-4-vla",
+      "description": "Vision-Language-Action Models",
+      "chapters": 6,
+      "chapter_range": "4.1-4.6"
+    }
+  ],
+  "chapter_structure": {
+    "required_directories": ["code", "exercises", "solutions"],
+    "optional_directories": ["robot_models", "configs", "worlds", "models"],
+    "code_directory": {
+      "description": "Runnable code examples for the chapter",
+      "allowed_extensions": [".py", ".js", ".bash", ".sh", ".ps1", ".yaml", ".yml", ".json", ".xml", ".cfg", ".launch.py", ".urdf", ".sdf"],
+      "validation": "syntax_check"
+    },
+    "exercises_directory": {
+      "description": "Exercise descriptions and instructions",
+      "allowed_extensions": [".md", ".txt"],
+      "validation": "format_check"
+    },
+    "solutions_directory": {
+      "description": "Exercise solutions and answer keys",
+      "allowed_extensions": [".md", ".py", ".js", ".bash", ".sh", ".txt"],
+      "validation": "solution_validation"
+    },
+    "robot_models_directory": {
+      "description": "URDF/SDF robot model files",
+      "allowed_extensions": [".urdf", ".sdf", ".xacro"],
+      "validation": "urdf_check"
+    }
+  },
+  "validation_rules": {
+    "code_executable": "All code files must be syntactically valid for their language",
+    "models_versioned": "URDF/SDF files must be compatible with target ROS 2/Isaac versions",
+    "solutions_available": "Every exercise file must have a corresponding solution",
+    "cross_platform": "All scripts must support Ubuntu 22.04, Windows 10/11, macOS 12+",
+    "file_naming": "Use lowercase with hyphens, no spaces in filenames"
+  },
+  "file_conventions": {
+    "naming_pattern": "lowercase-with-hyphens",
+    "max_filename_length": 50,
+    "forbidden_characters": [" ", "&", "%", "$", "#", "@"],
+    "required_prefixes": {
+      "exercise": "exercise-",
+      "solution": "solution-",
+      "config": "config-",
+      "model": "model-"
+    }
+  },
+  "shared_resources": {
+    "install_scripts": {
+      "path": "shared/install-scripts/",
+      "files": ["ubuntu-setup.sh", "windows-setup.ps1", "macos-setup.sh"],
+      "validation": "executable_check"
+    },
+    "docker": {
+      "path": "shared/docker/",
+      "files": ["Dockerfile"],
+      "validation": "dockerfile_validation"
+    },
+    "troubleshooting": {
+      "path": "shared/troubleshooting/",
+      "files": ["platform-specific.md"],
+      "validation": "format_check"
+    }
+  },
+  "quality_gates": {
+    "minimum_exercises_per_chapter": 2,
+    "minimum_code_examples_per_chapter": 3,
+    "required_documentation": ["README.md", "LICENSE"],
+    "cross_platform_compatibility": ["Ubuntu", "Windows", "macOS"]
+  }
+}

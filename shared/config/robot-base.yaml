@@ -1,0 +1,158 @@
+# Physical AI & Humanoid Robotics - Base Robot Configuration Template
+# Use this file as a template for configuring robots in chapters
+
+robot:
+  # Identification
+  name: "TurtleBot3"
+  type: "differential_drive"  # differential_drive, holonomic, manipulator, humanoid
+  description: "Mobile robot platform for ROS 2 learning"
+
+  # Physical Properties
+  geometry:
+    length_m: 0.18
+    width_m: 0.16
+    height_m: 0.12
+    mass_kg: 1.64
+    wheel_radius_m: 0.033
+    wheel_separation_m: 0.160
+
+  # Motion Capabilities
+  motion:
+    max_linear_velocity_ms: 0.26
+    max_angular_velocity_rads: 2.84
+    linear_acceleration_ms2: 0.5
+    angular_acceleration_rads2: 1.0
+
+  # Motor/Actuator Configuration
+  motors:
+    left_wheel:
+      type: "brushless_dc"
+      nominal_voltage_v: 12.0
+      max_current_a: 1.0
+      gear_ratio: 1.0
+      encoder_resolution: 4096
+    right_wheel:
+      type: "brushless_dc"
+      nominal_voltage_v: 12.0
+      max_current_a: 1.0
+      gear_ratio: 1.0
+      encoder_resolution: 4096
+
+  # Sensors
+  sensors:
+    lidar:
+      enabled: true
+      type: "2D LiDAR"
+      model: "LDS-01"
+      range_m: 3.5
+      resolution_deg: 1.0
+      frequency_hz: 5
+      mount:
+        x_m: 0.0
+        y_m: 0.0
+        z_m: 0.1
+    camera:
+      enabled: true
+      type: "RGB Camera"
+      model: "Logitech C920"
+      resolution: "1280x720"
+      frequency_hz: 30
+      fov_deg: 60
+      mount:
+        x_m: 0.05
+        y_m: 0.0
+        z_m: 0.08
+    imu:
+      enabled: true
+      type: "9-DOF IMU"
+      frequency_hz: 100
+      mount:
+        x_m: 0.0
+        y_m: 0.0
+        z_m: 0.05
+    odometry:
+      enabled: true
+      type: "wheel_odometry"
+      covariance_linear: 0.01
+      covariance_angular: 0.01
+
+  # Power System
+  power:
+    battery_type: "Li-Po"
+    battery_voltage_nominal_v: 12.0
+    battery_capacity_mah: 1800
+    charging_time_hours: 2.0
+    estimated_runtime_hours: 3.0
+
+  # ROS 2 Configuration
+  ros2:
+    namespace: "/robot"
+    node_name: "robot_controller"
+    domain_id: 0
+    middleware: "rmw_cyclonedds_cpp"  # or rmw_opensplice_cpp
+
+    # Topics
+    topics:
+      cmd_vel: "/cmd_vel"
+      odom: "/odom"
+      lidar: "/scan"
+      camera: "/camera/image_raw"
+      imu: "/imu"
+
+    # Services
+    services:
+      reset: "/reset_position"
+      get_state: "/get_robot_state"
+
+    # Parameters
+    parameters:
+      max_linear_vel: 0.26
+      max_angular_vel: 2.84
+      odom_frame: "odom"
+      base_frame: "base_link"
+
+  # Control Parameters
+  control:
+    type: "PID"
+    linear_pid:
+      kp: 1.0
+      ki: 0.1
+      kd: 0.5
+    angular_pid:
+      kp: 2.0
+      ki: 0.2
+      kd: 0.3
+
+  # Safety Parameters
+  safety:
+    emergency_stop_enabled: true
+    max_jerk_ms3: 5.0
+    collision_avoidance: true
+    min_obstacle_distance_m: 0.1
+
+# Simulation-specific settings
+simulation:
+  gazebo:
+    physics_engine: "ode"
+    real_time_factor: 1.0
+    gravity_m_s2: 9.81
+    model_path: "/path/to/models/turtlebot3_burger"
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARN, ERROR
+  file: "/tmp/robot_log.txt"
+  console_output: true
+
+# Performance Tuning
+performance:
+  cpu_cores: 2
+  memory_gb: 1
+  optimization_level: 2
+
+# Additional metadata
+metadata:
+  author: "Physical AI Lab"
+  version: "1.0.0"
+  created_date: "2025-12-16"
+  last_modified: "2025-12-16"

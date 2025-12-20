@@ -1,0 +1,11 @@
+# Publisher-Subscriber Pattern Diagram
+
+This file represents the publisher-subscriber-pattern.png diagram that would show:
+
+- Publisher node sending messages to a topic
+- Topic as a communication channel
+- Subscriber node receiving messages from the topic
+- Multiple subscribers possible for one publisher
+- Decoupled communication pattern
+
+Alt text: "Publisher and subscriber nodes connected via ROS 2 topic"

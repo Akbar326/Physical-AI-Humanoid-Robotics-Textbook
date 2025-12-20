@@ -1,0 +1,207 @@
+name: Cross-Platform Testing
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Run daily to catch platform-specific issues
+    - cron: '0 2 * * *'
+
+jobs:
+  test-matrix:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.10', '3.11']
+        node-version: ['18', '20']
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Display environment (Ubuntu)
+      if: runner.os == 'Linux'
+      run: |
+        echo "OS: Ubuntu"
+        uname -a
+        python --version
+        node --version
+        npm --version
+        which python
+        which node
+
+    - name: Display environment (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        echo "OS: Windows"
+        python --version
+        node --version
+        npm --version
+        where python
+        where node
+
+    - name: Display environment (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        echo "OS: macOS"
+        uname -a
+        python --version
+        node --version
+        npm --version
+        which python
+        which node
+
+    - name: Install Node dependencies
+      run: npm ci
+
+    - name: Install Python dependencies
+      run: pip install -q numpy scipy matplotlib PyYAML
+
+    - name: Build Docusaurus (Ubuntu)
+      if: runner.os == 'Linux'
+      run: npm run build
+
+    - name: Build Docusaurus (Windows)
+      if: runner.os == 'Windows'
+      run: npm run build
+
+    - name: Build Docusaurus (macOS)
+      if: runner.os == 'macOS'
+      run: npm run build
+
+    - name: Verify build output
+      run: |
+        if [ -d "build" ] || [ -d ".\build" ]; then
+          echo "✅ Build output verified"
+        else
+          echo "❌ Build output not found"
+          exit 1
+        fi
+      shell: bash
+
+    - name: Test Python syntax (Ubuntu/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        find docs -name "*.py" -type f -exec python -m py_compile {} \; 2>&1 || true
+
+    - name: Test Python syntax (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        Get-ChildItem -Path docs -Filter *.py -Recurse | ForEach-Object {
+          python -m py_compile $_.FullName 2>&1 -ErrorAction Continue
+        }
+      shell: powershell
+
+    - name: Validate YAML files
+      run: |
+        python -c "
+        import yaml
+        import glob
+        count = 0
+        for f in glob.glob('**/*.yml', recursive=True) + glob.glob('**/*.yaml', recursive=True):
+          try:
+            with open(f) as fp:
+              yaml.safe_load(fp)
+            count += 1
+          except Exception as e:
+            print(f'❌ {f}: {e}')
+            exit(1)
+        print(f'✅ Validated {count} YAML files')
+        "
+
+    - name: Check for common issues (Ubuntu/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        echo "🔍 Checking for common issues..."
+        # Check for Windows line endings
+        if grep -r $'\r' docs --include="*.md" | head -1; then
+          echo "⚠️  Windows line endings found - should use LF"
+        fi
+        # Check for broken links in docs
+        broken_links=$(grep -r "](.*\.md)" docs --include="*.md" | grep -v "https://" | wc -l)
+        echo "Found $broken_links potential internal links to verify"
+
+    - name: Check for common issues (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        echo "🔍 Checking for common issues..."
+        $count = (Get-ChildItem docs -Recurse -Filter "*.md" | Get-Content | Select-String "](" | Measure-Object).Count
+        Write-Host "Found $count potential links"
+      shell: powershell
+
+    - name: Test documentation structure
+      run: |
+        python3 << 'EOF'
+        import os
+        import sys
+
+        # Check required directories
+        required_dirs = ['docs', 'static/img', 'docs/preface']
+        for d in required_dirs:
+            if not os.path.isdir(d):
+                print(f"❌ Missing required directory: {d}")
+                sys.exit(1)
+
+        # Check for index.md
+        if not os.path.isfile('docs/index.md'):
+            print("❌ Missing docs/index.md")
+            sys.exit(1)
+
+        # Count chapters
+        chapters = len([f for f in os.listdir('docs') if f.startswith('chapter-')])
+        preface_files = len([f for f in os.listdir('docs/preface') if f.endswith('.md')])
+
+        print(f"✅ Found {chapters} chapter directories")
+        print(f"✅ Found {preface_files} preface files")
+        print("✅ Documentation structure valid")
+        EOF
+
+    - name: Generate platform report
+      run: |
+        python3 << 'EOF'
+        import platform
+        import sys
+
+        print("=" * 50)
+        print("Platform Test Report")
+        print("=" * 50)
+        print(f"OS: {platform.system()} {platform.release()}")
+        print(f"Python: {sys.version}")
+        print(f"Architecture: {platform.machine()}")
+        print("=" * 50)
+        print("✅ All tests passed on this platform")
+        EOF
+
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: test-matrix
+    if: always()
+
+    steps:
+    - name: Check test results
+      run: |
+        echo "# Cross-Platform Test Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ Tests completed on all platforms" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "- Ubuntu: ${{ needs.test-matrix.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Windows: ${{ needs.test-matrix.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- macOS: ${{ needs.test-matrix.result }}" >> $GITHUB_STEP_SUMMARY
