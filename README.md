@@ -20,6 +20,7 @@ This textbook is designed to take you from complete beginner to building autonom
 - **Simulation First**: Gazebo and Unity simulation environments for safe learning
 - **AI Integration**: NVIDIA Isaac Sim for reinforcement learning and autonomous behaviors
 - **VLA Systems**: Vision-Language-Action models for natural language robot interaction
+- **Interactive Book Queries**: Ask questions about book content using AI-powered RAG system
 
 ## 🛠️ Tech Stack
 
@@ -30,6 +31,8 @@ This textbook is designed to take you from complete beginner to building autonom
 - **Python 3.10+**: Primary programming language
 - **Docusaurus**: Static site generation for textbook
 - **JavaScript/React**: Interactive textbook interface
+- **FastAPI**: Backend API for RAG queries
+- **Qdrant**: Vector database for document retrieval
 
 ## 🚀 Installation
 
@@ -53,6 +56,80 @@ npm start
 ```
 
 The textbook will be available at `http://localhost:3000/physical-ai-robotics-textbook/`
+
+## 🤖 Frontend-Backend Integration
+
+The project includes an advanced frontend-backend integration that allows users to query book content using AI. Here's how to set it up:
+
+### Backend Setup
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+
+2. Install Python dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Set up your environment variables (OpenAI API key, Qdrant connection, etc.)
+
+4. Start the backend server:
+   ```bash
+   python run_server.py
+   ```
+   The backend should be accessible at `http://localhost:8000`.
+
+### Frontend Integration
+The frontend includes several components for RAG (Retrieval-Augmented Generation) queries:
+
+- **RagQueryContext**: Main component providing context and state management
+- **RagQueryForm**: Form for submitting queries about book content
+- **RagQueryResult**: Component for displaying API responses
+- **LoadingIndicator**: Shows loading states during API requests
+- **Text Selection Utility**: Captures selected text for context-aware queries
+
+### Adding Query Functionality to Pages
+To add the query functionality to any Docusaurus page, simply import and include the RagQueryContext component:
+
+```jsx
+import RagQueryContext from '@site/src/components/RagQuery/RagQueryContext';
+
+function MyBookPage() {
+  return (
+    <div>
+      <h1>My Book Page</h1>
+      <p>Page content here...</p>
+      <RagQueryContext />
+    </div>
+  );
+}
+```
+
+### Using the JavaScript Integration
+For non-React pages, you can use the direct script integration:
+
+1. Include the script in your HTML:
+   ```html
+   <script src="static/js/rag-integration.js"></script>
+   ```
+
+2. Add a container to your HTML:
+   ```html
+   <div id="rag-query-container" data-rag-integration
+        data-base-url="http://localhost:8000"
+        data-max-results="5"
+        data-include-citations="true">
+   </div>
+   ```
+
+### Features
+- **Natural Language Queries**: Ask questions about book content in plain English
+- **Context-Aware Queries**: Select text and ask questions about the specific content
+- **Citations**: Responses include source citations for fact-checking
+- **Error Handling**: Graceful handling of network errors, timeouts, and API failures
+- **Query History**: Previous queries are stored in browser's localStorage
+- **Responsive Design**: Works on desktop and mobile devices
 
 ## 📖 Learning Paths
 

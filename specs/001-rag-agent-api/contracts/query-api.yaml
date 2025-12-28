@@ -1,0 +1,135 @@
+# API Contract: RAG Agent Query Service
+
+## Service Overview
+The RAG Agent Query Service provides a REST API for querying book content through an AI agent that retrieves relevant information from a vector database and generates responses grounded in the retrieved context.
+
+## Base URL
+`http://localhost:8000` (or configured host/port)
+
+## Endpoints
+
+### Query Endpoint
+**POST** `/api/v1/query`
+
+#### Description
+Submit a natural language query to the RAG agent, which will retrieve relevant book content and generate a response grounded in that context.
+
+#### Request
+- **Content-Type**: `application/json`
+- **Authentication**: None (for development) or API key in header
+
+##### Request Body
+```json
+{
+  "query": "What are the key concepts in AI robotics?",
+  "max_results": 5,
+  "include_citations": true,
+  "temperature": 0.3
+}
+```
+
+**Fields**:
+- `query`: (string, required) The natural language query from the user (1-1000 characters)
+- `max_results`: (integer, optional) Maximum number of context results to retrieve (1-20, default: 5)
+- `include_citations`: (boolean, optional) Whether to include source citations in response (default: true)
+- `temperature`: (number, optional) Controls response creativity (0.0-1.0, default: 0.3)
+
+#### Response
+
+##### Success Response (200 OK)
+```json
+{
+  "query": "What are the key concepts in AI robotics?",
+  "answer": "AI robotics combines artificial intelligence with robotics to create autonomous systems...",
+  "citations": [
+    {
+      "url": "https://example-book.com/ai-robotics/concepts",
+      "title": "AI Robotics Concepts",
+      "score": 0.85
+    }
+  ],
+  "retrieved_contexts": [
+    {
+      "content": "AI robotics is an interdisciplinary field that combines...",
+      "url": "https://example-book.com/ai-robotics/concepts",
+      "title": "AI Robotics Concepts",
+      "score": 0.85
+    }
+  ],
+  "execution_time": 2.34,
+  "success": true
+}
+```
+
+**Response Fields**:
+- `query`: (string) Echo of the original query
+- `answer`: (string) The agent's response grounded in retrieved context
+- `citations`: (array) Sources used in the response
+- `retrieved_contexts`: (array) Full context snippets retrieved
+- `execution_time`: (number) Time taken to process the request in seconds
+- `success`: (boolean) Whether the request was processed successfully
+
+##### Error Responses
+
+**400 Bad Request** - Invalid request parameters
+```json
+{
+  "detail": "Query must be between 1 and 1000 characters",
+  "error_code": "INVALID_QUERY",
+  "success": false
+}
+```
+
+**422 Unprocessable Entity** - Validation error
+```json
+{
+  "detail": "Request body validation failed",
+  "error_code": "VALIDATION_ERROR",
+  "success": false
+}
+```
+
+**500 Internal Server Error** - Processing error
+```json
+{
+  "detail": "Failed to process query due to internal error",
+  "error_code": "INTERNAL_ERROR",
+  "success": false
+}
+```
+
+### Health Check Endpoint
+**GET** `/health`
+
+#### Description
+Check the health status of the API service.
+
+#### Response
+
+##### Success Response (200 OK)
+```json
+{
+  "status": "healthy",
+  "timestamp": "2025-12-23T10:00:00Z",
+  "version": "1.0.0"
+}
+```
+
+## Authentication
+Currently no authentication required for development. In production, an API key header may be required.
+
+## Rate Limiting
+The service supports up to 100 concurrent requests. Requests exceeding this limit will receive a 429 status code.
+
+## Error Codes
+- `INVALID_QUERY`: Query parameter validation failed
+- `VALIDATION_ERROR`: Request body validation failed
+- `RETRIEVAL_ERROR`: Failed to retrieve context from Qdrant
+- `AGENT_ERROR`: OpenAI agent processing failed
+- `INTERNAL_ERROR`: General internal processing error
+- `RATE_LIMIT_EXCEEDED`: Too many concurrent requests
+
+## Performance Expectations
+- 95% of requests should complete within 5 seconds
+- API should handle at least 100 concurrent requests
+- Response should include relevant, context-grounded answers
