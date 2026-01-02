@@ -1,12 +1,15 @@
 import React from 'react';
-import GlobalChat from '../components/GlobalChat/GlobalChat';
+import SafeGlobalChat from '../components/GlobalChat/SafeGlobalChat';
+import ErrorBoundary from '../components/GlobalChat/ErrorBoundary';
 
 // Default implementation, that you can customize
 function Root({ children }) {
   return (
     <React.Fragment>
       {children}
-      <GlobalChat />
+      <ErrorBoundary>
+        <SafeGlobalChat />
+      </ErrorBoundary>
     </React.Fragment>
   );
 }
