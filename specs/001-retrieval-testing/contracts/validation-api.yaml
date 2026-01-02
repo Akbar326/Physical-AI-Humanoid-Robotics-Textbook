@@ -1,0 +1,255 @@
+openapi: 3.0.0
+info:
+  title: Retrieval Pipeline Validation API
+  description: API for validating the RAG system's retrieval pipeline functionality
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+paths:
+  /validate/search:
+    post:
+      summary: Validate semantic search functionality
+      description: Run a test query against the Qdrant database and validate results
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchValidationRequest'
+      responses:
+        '200':
+          description: Search validation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchValidationResponse'
+        '400':
+          description: Invalid request parameters
+        '500':
+          description: Server error during validation
+  /validate/batch:
+    post:
+      summary: Run batch validation
+      description: Execute multiple test queries and validate the overall pipeline
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchValidationRequest'
+      responses:
+        '200':
+          description: Batch validation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchValidationResponse'
+        '400':
+          description: Invalid request parameters
+        '500':
+          description: Server error during validation
+  /validate/metadata:
+    post:
+      summary: Validate metadata accuracy
+      description: Check that search results include correct metadata
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetadataValidationRequest'
+      responses:
+        '200':
+          description: Metadata validation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataValidationResponse'
+        '400':
+          description: Invalid request parameters
+        '500':
+          description: Server error during validation
+components:
+  schemas:
+    SearchValidationRequest:
+      type: object
+      required:
+        - query
+        - expected_concepts
+      properties:
+        query:
+          type: string
+          description: The search query to test
+          example: "AI robotics fundamentals"
+        expected_concepts:
+          type: array
+          items:
+            type: string
+          description: Concepts that should be present in relevant results
+          example: ["artificial intelligence", "robotics", "machine learning"]
+        top_k:
+          type: integer
+          description: Number of results to return (default 5)
+          default: 5
+          example: 5
+    SearchValidationResponse:
+      type: object
+      properties:
+        query:
+          type: string
+          description: The original query
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RetrievedChunk'
+        relevance_score:
+          type: number
+          format: float
+          description: Overall relevance score (0.0-1.0)
+          example: 0.85
+        metadata_accuracy:
+          type: boolean
+          description: Whether all metadata is correct
+          example: true
+        response_time:
+          type: number
+          format: float
+          description: Query execution time in seconds
+          example: 0.42
+        passed:
+          type: boolean
+          description: Whether the validation passed
+          example: true
+        validation_details:
+          type: object
+          description: Detailed validation information
+          properties:
+            semantic_relevance:
+              type: boolean
+              description: Whether results are semantically relevant
+            metadata_complete:
+              type: boolean
+              description: Whether all required metadata is present
+            response_time_acceptable:
+              type: boolean
+              description: Whether response time meets requirements
+    BatchValidationRequest:
+      type: object
+      required:
+        - test_queries
+      properties:
+        test_queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchValidationRequest'
+          description: List of queries to test
+        scenario_name:
+          type: string
+          description: Name of the test scenario
+          example: "Basic Semantic Search"
+    BatchValidationResponse:
+      type: object
+      properties:
+        scenario_name:
+          type: string
+          description: Name of the test scenario
+        total_tests:
+          type: integer
+          description: Total number of tests executed
+          example: 10
+        passed_tests:
+          type: integer
+          description: Number of tests that passed
+          example: 9
+        success_rate:
+          type: number
+          format: float
+          description: Success rate as a percentage (0.0-1.0)
+          example: 0.9
+        average_response_time:
+          type: number
+          format: float
+          description: Average response time across all queries
+          example: 0.45
+        detailed_results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchValidationResponse'
+    MetadataValidationRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: The search query to test
+          example: "humanoid movement principles"
+        top_k:
+          type: integer
+          description: Number of results to validate (default 5)
+          default: 5
+          example: 5
+    MetadataValidationResponse:
+      type: object
+      properties:
+        query:
+          type: string
+          description: The original query
+        metadata_validation:
+          type: object
+          properties:
+            all_metadata_present:
+              type: boolean
+              description: Whether all expected metadata is present
+              example: true
+            source_urls_valid:
+              type: boolean
+              description: Whether all source URLs are valid
+              example: true
+            chunk_ids_unique:
+              type: boolean
+              description: Whether all chunk IDs are unique
+              example: true
+            content_previews_accurate:
+              type: boolean
+              description: Whether content previews match actual content
+              example: true
+        validation_passed:
+          type: boolean
+          description: Whether metadata validation passed
+          example: true
+        issues:
+          type: array
+          items:
+            type: string
+          description: List of any validation issues found
+          example: []
+    RetrievedChunk:
+      type: object
+      properties:
+        chunk_id:
+          type: string
+          description: Unique identifier for the text chunk
+          example: "abc123xyz"
+        content:
+          type: string
+          description: The actual text content of the chunk
+          example: "Artificial intelligence in robotics enables machines to perceive, reason, and act in complex environments..."
+        source_url:
+          type: string
+          description: URL where the content originated
+          example: "https://book-site.com/docs/ai-basics"
+        relevance_score:
+          type: number
+          format: float
+          description: Similarity score to the query (0.0-1.0)
+          example: 0.87
+        position:
+          type: integer
+          description: Rank position in the results
+          example: 1
+        metadata:
+          type: object
+          description: Additional metadata associated with the chunk
+          additionalProperties: true

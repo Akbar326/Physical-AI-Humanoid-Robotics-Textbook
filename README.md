@@ -20,6 +20,7 @@ This textbook is designed to take you from complete beginner to building autonom
 - **Simulation First**: Gazebo and Unity simulation environments for safe learning
 - **AI Integration**: NVIDIA Isaac Sim for reinforcement learning and autonomous behaviors
 - **VLA Systems**: Vision-Language-Action models for natural language robot interaction
+- **Interactive Book Queries**: Ask questions about book content using AI-powered RAG system
 
 ## 🛠️ Tech Stack
 
@@ -30,6 +31,8 @@ This textbook is designed to take you from complete beginner to building autonom
 - **Python 3.10+**: Primary programming language
 - **Docusaurus**: Static site generation for textbook
 - **JavaScript/React**: Interactive textbook interface
+- **FastAPI**: Backend API for RAG queries
+- **Qdrant**: Vector database for document retrieval
 
 ## 🚀 Installation
 
@@ -53,6 +56,85 @@ npm start
 ```
 
 The textbook will be available at `http://localhost:3000/physical-ai-robotics-textbook/`
+
+## 🤖 Frontend-Backend Integration
+
+The project includes an advanced frontend-backend integration that allows users to query book content using AI. Here's how to set it up:
+
+### Backend Setup
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+
+2. Install Python dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Set up your environment variables:
+   ```bash
+   # Create a .env file with your configuration
+   OPENAI_API_KEY="your-openai-api-key"
+   SITEMAP_URL="https://your-docusaurus-site.com/sitemap.xml"
+   PORT=8000
+   ```
+
+4. Pre-generate embeddings from your documentation:
+   ```bash
+   python -m scripts.ingest
+   ```
+
+5. Start the backend server:
+   ```bash
+   python run_server.py
+   ```
+   The backend should be accessible at `http://localhost:8000`.
+
+### Frontend Integration
+
+#### Option 1: Backend Serves Frontend (Recommended for Production)
+The backend is configured to serve the frontend files directly. When you run the backend server, it will automatically serve the chatbot UI at the root path.
+
+#### Option 2: Standalone Frontend (For Development)
+The frontend can also run independently:
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the frontend server:
+   ```bash
+   npm start
+   ```
+
+### Chatbot Features
+- **Dual Query Modes**: Toggle between regular RAG and advanced agent-enhanced queries
+- **Real-time Chat Interface**: Clean, responsive messaging experience
+- **Source Citations**: Responses include links to relevant documentation
+- **Typing Indicators**: Visual feedback during AI processing
+- **Error Handling**: Graceful fallbacks for API issues
+- **Responsive Design**: Works on desktop and mobile devices
+
+### API Endpoints
+- `/query` - Regular RAG queries for simple questions
+- `/agent-query` - Agent-enhanced queries for complex reasoning
+- `/health` - Health check endpoint
+- `/ingest` - Trigger documentation ingestion
+
+### Architecture
+The system uses:
+- **FastAPI** for the backend API
+- **FAISS** for efficient vector storage and similarity search
+- **Sentence Transformers** for document embeddings
+- **OpenAI Agents SDK** for advanced reasoning capabilities
+- **Static file serving** for frontend delivery
 
 ## 📖 Learning Paths
 
