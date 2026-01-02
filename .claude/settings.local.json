@@ -117,7 +117,11 @@
       "Bash(timeout 300s tail -f /tmp/claude/tasks/bcd4718.output)",
       "Bash(python -c \"import faiss; print(''FAISS imported successfully'')\")",
       "Bash(mkdir -p frontend/src)",
-      "Bash(python test_system.py)"
+      "Bash(python test_system.py)",
+      "Bash(git checkout -b 004-global-agent-chat)",
+      "Bash(git checkout .env.example)",
+      "Bash(dir \"D:\\Hackathon Q3\\ai-humanoid-robotics\\src\\theme\" /s)",
+      "Bash(cmd /c \"dir \"\"D:\\Hackathon Q3\\ai-humanoid-robotics\\src\\theme\"\" /s\")"
     ],
     "deny": [],
     "ask": []
