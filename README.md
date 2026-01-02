@@ -72,64 +72,69 @@ The project includes an advanced frontend-backend integration that allows users 
    pip install -r requirements.txt
    ```
 
-3. Set up your environment variables (OpenAI API key, Qdrant connection, etc.)
+3. Set up your environment variables:
+   ```bash
+   # Create a .env file with your configuration
+   OPENAI_API_KEY="your-openai-api-key"
+   SITEMAP_URL="https://your-docusaurus-site.com/sitemap.xml"
+   PORT=8000
+   ```
 
-4. Start the backend server:
+4. Pre-generate embeddings from your documentation:
+   ```bash
+   python -m scripts.ingest
+   ```
+
+5. Start the backend server:
    ```bash
    python run_server.py
    ```
    The backend should be accessible at `http://localhost:8000`.
 
 ### Frontend Integration
-The frontend includes several components for RAG (Retrieval-Augmented Generation) queries:
 
-- **RagQueryContext**: Main component providing context and state management
-- **RagQueryForm**: Form for submitting queries about book content
-- **RagQueryResult**: Component for displaying API responses
-- **LoadingIndicator**: Shows loading states during API requests
-- **Text Selection Utility**: Captures selected text for context-aware queries
+#### Option 1: Backend Serves Frontend (Recommended for Production)
+The backend is configured to serve the frontend files directly. When you run the backend server, it will automatically serve the chatbot UI at the root path.
 
-### Adding Query Functionality to Pages
-To add the query functionality to any Docusaurus page, simply import and include the RagQueryContext component:
+#### Option 2: Standalone Frontend (For Development)
+The frontend can also run independently:
 
-```jsx
-import RagQueryContext from '@site/src/components/RagQuery/RagQueryContext';
-
-function MyBookPage() {
-  return (
-    <div>
-      <h1>My Book Page</h1>
-      <p>Page content here...</p>
-      <RagQueryContext />
-    </div>
-  );
-}
-```
-
-### Using the JavaScript Integration
-For non-React pages, you can use the direct script integration:
-
-1. Include the script in your HTML:
-   ```html
-   <script src="static/js/rag-integration.js"></script>
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
    ```
 
-2. Add a container to your HTML:
-   ```html
-   <div id="rag-query-container" data-rag-integration
-        data-base-url="http://localhost:8000"
-        data-max-results="5"
-        data-include-citations="true">
-   </div>
+2. Install dependencies:
+   ```bash
+   npm install
    ```
 
-### Features
-- **Natural Language Queries**: Ask questions about book content in plain English
-- **Context-Aware Queries**: Select text and ask questions about the specific content
-- **Citations**: Responses include source citations for fact-checking
-- **Error Handling**: Graceful handling of network errors, timeouts, and API failures
-- **Query History**: Previous queries are stored in browser's localStorage
+3. Start the frontend server:
+   ```bash
+   npm start
+   ```
+
+### Chatbot Features
+- **Dual Query Modes**: Toggle between regular RAG and advanced agent-enhanced queries
+- **Real-time Chat Interface**: Clean, responsive messaging experience
+- **Source Citations**: Responses include links to relevant documentation
+- **Typing Indicators**: Visual feedback during AI processing
+- **Error Handling**: Graceful fallbacks for API issues
 - **Responsive Design**: Works on desktop and mobile devices
+
+### API Endpoints
+- `/query` - Regular RAG queries for simple questions
+- `/agent-query` - Agent-enhanced queries for complex reasoning
+- `/health` - Health check endpoint
+- `/ingest` - Trigger documentation ingestion
+
+### Architecture
+The system uses:
+- **FastAPI** for the backend API
+- **FAISS** for efficient vector storage and similarity search
+- **Sentence Transformers** for document embeddings
+- **OpenAI Agents SDK** for advanced reasoning capabilities
+- **Static file serving** for frontend delivery
 
 ## 📖 Learning Paths
 

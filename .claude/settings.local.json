@@ -108,7 +108,16 @@
       "Bash(cat /tmp/claude/tasks/bf5a73b.output)",
       "Bash(python -c \"from main import app; import uvicorn; uvicorn.run(app, host=''127.0.0.1'', port=8000, log_level=''info'')\")",
       "Bash(cat /tmp/claude/tasks/b1bed46.output)",
-      "Bash(timeout 10s python -c \"from main import app; import uvicorn; uvicorn.run(app, host=''127.0.0.1'', port=8000, log_level=''info'')\")"
+      "Bash(timeout 10s python -c \"from main import app; import uvicorn; uvicorn.run(app, host=''127.0.0.1'', port=8000, log_level=''info'')\")",
+      "Bash(mkdir -p specs/001-rag-chatbot)",
+      "SlashCommand(/sp.plan)",
+      "SlashCommand(/sp.implement)",
+      "Bash(python test_basic.py)",
+      "Bash(pip install -r requirements.txt)",
+      "Bash(timeout 300s tail -f /tmp/claude/tasks/bcd4718.output)",
+      "Bash(python -c \"import faiss; print(''FAISS imported successfully'')\")",
+      "Bash(mkdir -p frontend/src)",
+      "Bash(python test_system.py)"
     ],
     "deny": [],
     "ask": []

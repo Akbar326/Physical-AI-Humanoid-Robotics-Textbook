@@ -1,30 +1,28 @@
+#!/usr/bin/env python3
 """
-Script to run the RAG Agent API server
+Script to run the RAG chatbot server.
 """
 
 import uvicorn
 import os
-from main import app
+from config import settings
 
 
-def run_server():
+def main():
     """
-    Run the FastAPI server
+    Main function to start the FastAPI server.
     """
-    host = os.getenv("API_HOST", "0.0.0.0")
-    port = int(os.getenv("API_PORT", "8000"))
-
-    print(f"Starting RAG Agent API server on {host}:{port}")
-    print("API documentation available at: http://localhost:8000/docs")
+    print("Starting RAG Chatbot Server...")
+    print(f"Server will run on 0.0.0.0:{settings.port}")
 
     uvicorn.run(
         "main:app",
-        host=host,
-        port=port,
-        reload=True,  # Enable auto-reload during development
+        host="0.0.0.0",
+        port=settings.port,
+        reload=False,  # Set to True for development only
         log_level="info"
     )
 
 
 if __name__ == "__main__":
-    run_server()
+    main()

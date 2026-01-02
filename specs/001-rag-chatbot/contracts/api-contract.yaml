@@ -1,0 +1,72 @@
+# API Contract: RAG Chatbot Backend
+
+## Query Endpoint
+**Path**: `POST /query`
+**Description**: Submit a natural language query to the RAG system and receive a response with citations.
+
+### Request
+```json
+{
+  "query": "What is the purpose of this documentation?",
+  "session_id": "optional-session-identifier",
+  "top_k": 5
+}
+```
+
+### Response
+```json
+{
+  "answer": "The documentation provides guidance on how to use the system effectively...",
+  "sources": [
+    {
+      "title": "Getting Started Guide",
+      "url": "https://example.com/docs/getting-started",
+      "content": "Excerpt of relevant content..."
+    }
+  ],
+  "query_time": 1.234,
+  "session_id": "optional-session-identifier"
+}
+```
+
+### Error Responses
+- `400 Bad Request`: Invalid query format
+- `500 Internal Server Error`: Processing error
+
+## Health Check Endpoint
+**Path**: `GET /health`
+**Description**: Check the health status of the RAG service.
+
+### Response
+```json
+{
+  "status": "healthy",
+  "timestamp": "2025-12-28T10:00:00Z",
+  "vector_store_loaded": true
+}
+```
+
+## Ingestion Endpoint
+**Path**: `POST /ingest`
+**Description**: Trigger the ingestion process to update the vector store with new documentation content.
+
+### Request
+```json
+{
+  "sitemap_url": "https://example.com/sitemap.xml",
+  "force_rebuild": false
+}
+```
+
+### Response
+```json
+{
+  "status": "started",
+  "message": "Ingestion process initiated",
+  "job_id": "ingestion-job-identifier"
+}
+```
+
+### Error Responses
+- `400 Bad Request`: Invalid sitemap URL
+- `500 Internal Server Error`: Ingestion error
