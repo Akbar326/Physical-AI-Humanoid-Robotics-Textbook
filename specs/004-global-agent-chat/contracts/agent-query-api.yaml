@@ -1,0 +1,110 @@
+openapi: 3.0.0
+info:
+  title: Agent Query API
+  description: API for agent-enhanced query processing
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+paths:
+  /agent-query:
+    post:
+      summary: Submit a query to the agent-enhanced system
+      description: Process a natural language query using agent capabilities and return a response with sources
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentQueryRequest'
+      responses:
+        '200':
+          description: Successful response from the agent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentQueryResponse'
+        '400':
+          description: Bad request - invalid query format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    AgentQueryRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: The natural language query to process
+          example: "What are the key concepts in reinforcement learning?"
+        session_id:
+          type: string
+          description: Optional session identifier for conversation context
+          example: "sess_12345"
+        top_k:
+          type: integer
+          description: Number of sources to retrieve (default: 5)
+          default: 5
+          example: 3
+    AgentQueryResponse:
+      type: object
+      required:
+        - answer
+        - sources
+        - query_time
+      properties:
+        answer:
+          type: string
+          description: The agent's response to the query
+          example: "Reinforcement learning involves an agent learning to make decisions by taking actions in an environment to maximize cumulative reward..."
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceDocument'
+          description: List of source documents used in the response
+        query_time:
+          type: number
+          description: Time taken to process the query in seconds
+          example: 1.23
+        session_id:
+          type: string
+          description: Session identifier if provided in request
+          example: "sess_12345"
+    SourceDocument:
+      type: object
+      required:
+        - title
+        - url
+        - content
+      properties:
+        title:
+          type: string
+          description: Title of the source document
+          example: "Introduction to Reinforcement Learning"
+        url:
+          type: string
+          description: URL of the source document
+          example: "https://example.com/rl-intro"
+        content:
+          type: string
+          description: Content of the source document (truncated)
+          example: "Reinforcement learning is a type of machine learning where an agent learns to behave in an environment..."
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "Query processing failed"
